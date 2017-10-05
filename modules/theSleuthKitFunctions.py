@@ -13,8 +13,8 @@ def diskImageFileInfo(image_file):
     return pytsk3.Img_Info(image_file)
 
 # Disk Image Volume Information
-def diskImageVolumeInfo(image_file):
-    return pytsk3.Volume_Info(image_file)
+def diskImageVolumeInfo(image_handle):
+    return pytsk3.Volume_Info(image_handle)
 
 
 
