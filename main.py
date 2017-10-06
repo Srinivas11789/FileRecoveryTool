@@ -39,7 +39,7 @@ imageFileHandler.file_extraction(file_contents)
 # Create a Temporary Memory to Analyze Combining all the Memory Files provided
 temp_filename = "tempDisk.image"
 temp_file = open(temp_filename,'wb')
-temp_file.write(file_contents)
+temp_file.write(file_contents.encode('hex'))
 temp_file.close()
 
 # Temporary File - Handler as a Single File
