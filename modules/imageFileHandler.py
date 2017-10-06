@@ -25,22 +25,23 @@ def file_create(data):
     image_file_created.close()
 
 # Magic Numbers for Images
-img_data = {"jpg":{"start":"ffd8","end":"ffd9"},}
+img_data = {"jpg": {"start":"ffd8ff","end":"ffd9"}}
 
 # Extract Image Files
 def file_extraction(data):
-    for type in img_data:
-        print "Searching for %s files..." % (type)
+    for key,value in img_data.iteritems():
+        print "Searching for %s files..." % (key)
         #print data.encode('hex')
-        jpegs_snatched = re.findall("(ffd8(.+?)ffd9)", data.encode('hex').strip())
+        regex_string = r"("+re.escape(value["start"])+r".+?"+re.escape(value["end"])+r")"
+        jpegs_snatched = re.findall(regex_string, data.encode('hex').strip())
         if jpegs_snatched:
             for snatches in jpegs_snatched:
-                #print snatches[0]
+                #print snatches
                 #print "\n"*10
                 global count
                 count = count + 1
                 try:
-                 file_create(snatches[0].strip().decode('hex'))
+                 file_create(snatches.strip().decode('hex'))
                 except:
                   pass
 

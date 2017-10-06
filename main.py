@@ -16,6 +16,7 @@ import os, sys
 sys.path.insert(0, 'modules/')
 import ordinaryFileHandle
 import imageFileHandler
+import pdfFileHandler
 #import theSleuthKitFunctions 
 
 # Multiple Files Reception from the Arguments
@@ -34,6 +35,7 @@ if not os.path.exists(directory):
 file_contents = ordinaryFileHandle.copyMemory(ordinaryFileHandle.fileOpen(files))
 
 imageFileHandler.file_extraction(file_contents)
+pdfFileHandler.file_extraction(file_contents)
 
 """
 # Create a Temporary Memory to Analyze Combining all the Memory Files provided
