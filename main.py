@@ -33,6 +33,12 @@ if not os.path.exists(directory):
 
 # Copy Contents of all the Files 
 file_contents = ordinaryFileHandle.copyMemory(ordinaryFileHandle.fileOpen(files))
+#print "\n"*10
+#print file_contents.encode('hex')
+#print "\n"*10
+hand = open("temp.txt","wb")
+hand.write(file_contents.encode("hex"))
+hand.close()
 
 imageFileHandler.file_extraction(file_contents)
 pdfFileHandler.file_extraction(file_contents)
