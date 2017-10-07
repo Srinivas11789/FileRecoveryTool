@@ -25,24 +25,41 @@ def file_create(data):
     image_file_created.close()
 
 # Magic Numbers for Images
-img_data = {"jpg": {"start":"ffd8ff","end":"ffd9"}}
+#img_data = {"jpg": {"start":"ffd8ff","end":"ffd9"}}
+img_data = {"jpg": {"start":"ff\sd8\sff","end":"ff\sd9"}}
 
 # Extract Image Files
 def file_extraction(data):
     for key,value in img_data.iteritems():
         print "Searching for %s files..." % (key)
+        list_data = re.findall('..',data.encode('hex'))
+        list_data = " ".join(list_data)
+        #print list_data
         #print data.encode('hex')
         regex_string = r"("+re.escape(value["start"])+r".+?"+re.escape(value["end"])+r")"
-        jpegs_snatched = re.findall(regex_string, data.encode('hex'))
+        #regex_string = r"(" + re.escape(value["start"]) + r".+?" + r"!" + re.escape(value["start"]) + r".+?" + re.escape(value["end"]) + r")"
+        #regex_string = r"(" + re.escape(value["start"]) + r".+?" + r"!" + re.escape(value["start"]) + r".+?" + re.escape(value["end"]) + r".+?" +re.escape(value["end"]) + r")"
+        #regex_string = "(ffd8ff.+?!ffd8ff.+?ffd9)"
+       ## jpegs_snatched = re.findall(regex_string, data.strip().encode('hex'))
+        jpegs_snatched = re.findall(regex_string, list_data)
         if jpegs_snatched:
             for snatches in jpegs_snatched:
-                #print snatches
+                ##print snatches
                 #print "\n"*10
                 global count
                 count = count + 1
+                #snatches =
                 try:
+                 #snatches.replace(" ","")
+                 snatches = ''.join(snatches.split())
+                 #print "\n"*10
+                 #print snatches
                  file_create(snatches.decode('hex'))
                 except:
+                  #print "\n" * 10
+                  #regex_string = r"(" + re.escape(value["start"]) + r".+?" + re.escape(value["end"]) + r".+?" + re.escape(value["end"]) + r")"
+                  #file_create(.decode('hex'))
+                  #print snatches
                   pass
 
 
