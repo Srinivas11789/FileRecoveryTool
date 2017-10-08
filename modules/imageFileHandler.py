@@ -17,80 +17,48 @@ def directory_create():
     os.makedirs(directory)
 
 # Create Image Files with the Data Given
-def file_create(data):
+def file_create(data, type):
     directory_create()
-    filename = directory+"image"+str(count)+".jpg"
+    filename = directory+"image"+str(count)+"."+type
     image_file_created = open(filename, 'wb')
     image_file_created.write(data)
     image_file_created.close()
 
 # Magic Numbers for Images
-#img_data = {"jpg": {"start":"ffd8ff","end":"ffd9"}}
-img_data = {"jpg": {"start": "ffd8ffe0", "end": "ffd9"}}   # JFIF
+img_data = {"jpg": {"start": "ffd8ffe0", "end": "ffd9"}, "bmp":{"start": "424d"},"png":{"start": "89504e47"}}  # JFIF
 
 # Extract Image Files
 def file_extraction(data):
-    #time_now = datetime.datetime.now()
-    #print "Time now is %s" % (str(time_now))
     for key,value in img_data.iteritems():
         print "Searching for %s files..." % (key)
-        #list_data = re.findall('..',data.encode('hex'))
-        #list_data = " ".join(list_data)
-        #print list_data
-        #print data.encode('hex')
-        regex_string = r"("+re.escape(value["start"])+r".+?"+re.escape(value["end"])+r")"
-        #regex_string = r"(" + re.escape(value["start"]) + r".+?" + re.escape(value["mid"]) + r".+?" + re.escape(value["end"]) + r")"
-        #regex_string = r"(" + re.escape(value["start"]) + r".+?" + r"!" + re.escape(value["start"]) + r".+?" + re.escape(value["end"]) + r")"
-        #regex_string = r"(" + re.escape(value["start"]) + r".+?" + r"!" + re.escape(value["start"]) + r".+?" + re.escape(value["end"]) + r".+?" +re.escape(value["end"]) + r")"
-        #regex_string = "(ffd8ff.+?!ffd8ff.+?ffd9)"
-       ## jpegs_snatched = re.findall(regex_string, data.strip().encode('hex'))
-        jpegs_snatched = re.findall(regex_string, data.strip().encode('hex'))
-        #regex_time = datetime.datetime.now()
-        #print "Regex time is %s" % (str(regex_time))
-        if jpegs_snatched:
-            for snatches in jpegs_snatched:
-                check = re.search(r"("+re.escape(value["start"])+r".+?"+re.escape(value["start"])+r")",snatches)
-                if not check:
-                    ##print snatches
-                    #print "\n"*10
-                    global count
-                    count = count + 1
-                    #snatches =
-                    try:
-                     #snatches.replace(" ","")
-                     snatches = ''.join(snatches.split())
-                     #print "\n"*10
-                     #print snatches
-                     file_create(snatches.decode('hex'))
-                    except Exception, e:
-                        print len(snatches)
-                        if "Odd" in str(e):
-                            while len(snatches) % 2 != 0:
-                                regex_string = r"("+re.escape(snatches)+r".+?"+re.escape(value["end"])+r")"
-                                fetch = re.search(regex_string, data.encode('hex'))
-                                snatches = fetch.group(1)
-                                # print "\n" * 10
-                                # regex_string = r"(" + re.escape(value["start"]) + r".+?" + re.escape(value["end"]) + r".+?" + re.escape(value["end"]) + r")"
-                                # file_create(.decode('hex'))
-                                # print snatches
-                                # print "\n"*10
-                                #print snatches.group(1)
-                            file_create(fetch.group(1).decode('hex'))
-                        pass
-
-        #time_now = datetime.datetime.now()
-        #print "Time at end is %s" % (str(time_now))
-
-
-        """
-        for snatches in jpegs_snatched:
-            print snatches
-            global count
-            count = count + 1
-            break
-            #file_create(snatches)
-        """
-
+        if key == "jpg":
+            regex_string = r"("+re.escape(value["start"])+r".+?"+re.escape(value["end"])+r")"
+            jpegs_snatched = re.findall(regex_string, data.strip().encode('hex'))
+            if jpegs_snatched:
+                for snatches in jpegs_snatched:
+                    check = re.search(r"("+re.escape(value["start"])+r".+?"+re.escape(value["start"])+r")",snatches)
+                    if not check:
+                        global count
+                        count = count + 1
+                        try:
+                         snatches = ''.join(snatches.split())
+                         file_create(snatches.decode('hex'), key)
+                        except Exception, e:
+                            if "Odd" in str(e):
+                                while len(snatches) % 2 != 0:
+                                    regex_string = r"("+re.escape(snatches)+r".+?"+re.escape(value["end"])+r")"
+                                    fetch = re.search(regex_string, data.encode('hex'))
+                                    snatches = fetch.group(1)
+                                file_create(fetch.group(1).decode('hex'), key)
+                            pass
+            elif key == "bmp":
+                check = re.search(re.escape(value["start"]), data.encode('hex'))
+                if check:
+                    print "BMP Signatures Found... Logic for Fetching length of BMP files 4 bytes from Header to be added!"
+            elif key == "png":
+                check = re.search(re.escape(value["start"]), data.encode('hex'))
+                if check:
+                    print "PNG Signatures Found... Logic for Fetching length of PNG files to be added!"
 
 
 
