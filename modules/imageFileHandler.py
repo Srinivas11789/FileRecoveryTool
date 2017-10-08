@@ -8,7 +8,11 @@ import os
 import re
 import datetime
 import hashlib
+import warnings
+
 try:
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
     from PIL import Image
     from PIL.ExifTags import TAGS
     exifinfo_compatibility = "True"
@@ -71,23 +75,25 @@ def file_extraction(data):
 
 
 # File Metadata Extraction
-def file_metadata_extract(file, type):
+def file_metadata_extract(file):
     metadata = {}
     if exifinfo_compatibility == "True":
-        imagefile = Image.open(os.path.join(r"report/"+type+r"/", file))
+        imagefile = Image.open(os.path.join(r"report/"+"jpg"+r"/", file))
         try:
-         for key, value in imagefile._getexif().items():
-            metadata[TAGS.get(key, key)] = value
+            exifdata = imagefile._getexif()
         except Exception,e:
             pass
+        if exifdata:
+            for key, value in exifdata.items():
+                 metadata[TAGS.get(key, key)] = value
     else:
         print "PIL Module is not present - MetaData Extraction from image files failed!"
-    return metadata
+    return str(metadata)
 
 # File MD5 Calculation
 def file_md5_calculate(file):
-    original_hash = hashlib.md5(open(file, 'rb').read()).hexdigest()
-    return original_hash
+    original_hash = hashlib.md5(open(r"report/"+"jpg"+r"/"+file, 'rb').read()).hexdigest()
+    return str(original_hash)
 
 
 

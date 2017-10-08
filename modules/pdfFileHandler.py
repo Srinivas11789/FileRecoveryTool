@@ -54,18 +54,18 @@ def file_metadata_extract(file):
     metadata = {}
     if pdfinfo_compatibility == "True":
       try:
-        pdffile = pyPdf.PdfFileReader(file(file, 'rb')).getDocumentInfo()
+        pdffile = pyPdf.PdfFileReader(file(r"report/"+"pdf"+r"/"+file, 'rb')).getDocumentInfo()
         metadata.update(pdffile)
       except Exception,e:
             pass
     else:
         print "PyPDF Module is not present - MetaData Extraction from PDF files failed!"
-    return metadata
+    return str(metadata)
 
 # File MD5 Calculation
 def file_md5_calculate(file):
-    original_hash = hashlib.md5(open(file, 'rb').read()).hexdigest()
-    return original_hash
+    original_hash = hashlib.md5(open(r"report/"+"pdf"+r"/"+file, 'rb').read()).hexdigest()
+    return str(original_hash)
 
 
 
