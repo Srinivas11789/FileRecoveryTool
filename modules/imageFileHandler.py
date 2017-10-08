@@ -26,16 +26,16 @@ def file_create(data):
 
 # Magic Numbers for Images
 #img_data = {"jpg": {"start":"ffd8ff","end":"ffd9"}}
-img_data = {"jpg": {"start": "ff d8 ff e0", "mid": "4a 46 49 46", "end": "ff d9"}}   # JFIF
+img_data = {"jpg": {"start": "ffd8ffe0", "end": "ffd9"}}   # JFIF
 
 # Extract Image Files
 def file_extraction(data):
-    time_now = datetime.datetime.now()
-    print "Time now is %s" % (str(time_now))
+    #time_now = datetime.datetime.now()
+    #print "Time now is %s" % (str(time_now))
     for key,value in img_data.iteritems():
         print "Searching for %s files..." % (key)
-        list_data = re.findall('..',data.encode('hex'))
-        list_data = " ".join(list_data)
+        #list_data = re.findall('..',data.encode('hex'))
+        #list_data = " ".join(list_data)
         #print list_data
         #print data.encode('hex')
         regex_string = r"("+re.escape(value["start"])+r".+?"+re.escape(value["end"])+r")"
@@ -44,9 +44,9 @@ def file_extraction(data):
         #regex_string = r"(" + re.escape(value["start"]) + r".+?" + r"!" + re.escape(value["start"]) + r".+?" + re.escape(value["end"]) + r".+?" +re.escape(value["end"]) + r")"
         #regex_string = "(ffd8ff.+?!ffd8ff.+?ffd9)"
        ## jpegs_snatched = re.findall(regex_string, data.strip().encode('hex'))
-        jpegs_snatched = re.findall(regex_string, list_data)
-        regex_time = datetime.datetime.now()
-        print "Regex time is %s" % (str(regex_time))
+        jpegs_snatched = re.findall(regex_string, data.strip().encode('hex'))
+        #regex_time = datetime.datetime.now()
+        #print "Regex time is %s" % (str(regex_time))
         if jpegs_snatched:
             for snatches in jpegs_snatched:
                 check = re.search(r"("+re.escape(value["start"])+r".+?"+re.escape(value["start"])+r")",snatches)
@@ -62,14 +62,24 @@ def file_extraction(data):
                      #print "\n"*10
                      #print snatches
                      file_create(snatches.decode('hex'))
-                    except:
-                      #print "\n" * 10
-                      #regex_string = r"(" + re.escape(value["start"]) + r".+?" + re.escape(value["end"]) + r".+?" + re.escape(value["end"]) + r")"
-                      #file_create(.decode('hex'))
-                      #print snatches
-                      pass
-        time_now = datetime.datetime.now()
-        print "Time at end is %s" % (str(time_now))
+                    except Exception, e:
+                        print len(snatches)
+                        if "Odd" in str(e):
+                            while len(snatches) % 2 != 0:
+                                regex_string = r"("+re.escape(snatches)+r".+?"+re.escape(value["end"])+r")"
+                                fetch = re.search(regex_string, data.encode('hex'))
+                                snatches = fetch.group(1)
+                                # print "\n" * 10
+                                # regex_string = r"(" + re.escape(value["start"]) + r".+?" + re.escape(value["end"]) + r".+?" + re.escape(value["end"]) + r")"
+                                # file_create(.decode('hex'))
+                                # print snatches
+                                # print "\n"*10
+                                #print snatches.group(1)
+                            file_create(fetch.group(1).decode('hex'))
+                        pass
+
+        #time_now = datetime.datetime.now()
+        #print "Time at end is %s" % (str(time_now))
 
 
         """
