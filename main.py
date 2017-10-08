@@ -10,14 +10,14 @@
 ############################################################################################################################
 
 # Module Import
-import os, sys
+import os
+import sys
 
 # Custom Module Import
 sys.path.insert(0, 'modules/')
 import ordinaryFileHandle
 import imageFileHandler
 import pdfFileHandler
-#import theSleuthKitFunctions 
 
 # Multiple Files Reception from the Arguments
 if len(sys.argv) < 2:
@@ -33,31 +33,15 @@ if not os.path.exists(directory):
 
 # Copy Contents of all the Files 
 file_contents = ordinaryFileHandle.copyMemory(ordinaryFileHandle.fileOpen(files))
-#print "\n"*10
-#print file_contents.encode('hex')
-#print "\n"*10
-hand = open("temp.txt","wb")
-hand.write(file_contents.encode("hex"))
-hand.close()
 
 imageFileHandler.file_extraction(file_contents)
 pdfFileHandler.file_extraction(file_contents)
 
-"""
-# Create a Temporary Memory to Analyze Combining all the Memory Files provided
-temp_filename = "tempDisk.image"
-temp_file = open(temp_filename,'wb')
-temp_file.write(file_contents.encode('hex'))
-temp_file.close()
+for file in os.listdir("report/jpg"):
+    print imageFileHandler.file_metadata_extract(file, "jpg")
+    print "\n"*10
 
-# Temporary File - Handler as a Single File
-temp_file = open(temp_filename,'rb')
-print temp_file.readline()
-"""
+for file in os.listdir("report/pdf"):
+    print pdfFileHandler.file_metadata_extract(file)
+    print "\n" * 10
 
-"""
-# Disk Image Information
-partition_info = theSleuthKitFunctions.diskImageVolumeInfo(theSleuthKitFunctions.diskImageFileInfo(temp_filename))
-
-print partition_info
-"""

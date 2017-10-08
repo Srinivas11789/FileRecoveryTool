@@ -7,7 +7,7 @@
 #    * os
 #    * sys
 #    * hashlib
-#    * pil
+#    * pil (pillow)
 #    * datetime
 #    * re
 #    * pypdf

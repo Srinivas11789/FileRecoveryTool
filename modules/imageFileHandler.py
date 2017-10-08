@@ -69,12 +69,22 @@ def file_extraction(data):
                 if check:
                     print "PNG Signatures Found... Logic for Fetching length of PNG files to be added!"
 
-def file_metadata_extract(file):
+
+# File Metadata Extraction
+def file_metadata_extract(file, type):
+    metadata = {}
     if exifinfo_compatibility == "True":
-        #
+        imagefile = Image.open(os.path.join(r"report/"+type+r"/", file))
+        try:
+         for key, value in imagefile._getexif().items():
+            metadata[TAGS.get(key, key)] = value
+        except Exception,e:
+            pass
     else:
         print "PIL Module is not present - MetaData Extraction from image files failed!"
+    return metadata
 
+# File MD5 Calculation
 def file_md5_calculate(file):
     original_hash = hashlib.md5(open(file, 'rb').read()).hexdigest()
     return original_hash
