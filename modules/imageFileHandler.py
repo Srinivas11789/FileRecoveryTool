@@ -4,22 +4,31 @@
 #
 #########################################################################################################
 
-import os, re, datetime
+import os
+import re
+import datetime
+import hashlib
+try:
+    from PIL import Image
+    from PIL.ExifTags import TAGS
+    exifinfo_compatibility = "True"
+except:
+    exifinfo_compatibility = "False"
 
 # Global Variable COUNT - to keep track of files as they are found
 main_path = os.getcwd()
 count = 0
-directory = "report/jpg/"
 
 # Folder Creator For Jpeg Files
-def directory_create():
+def directory_create(type):
+ directory = r"report/"+type+r"/"
  if not os.path.exists(directory):
     os.makedirs(directory)
 
 # Create Image Files with the Data Given
 def file_create(data, type):
-    directory_create()
-    filename = directory+"image"+str(count)+"."+type
+    directory_create(type)
+    filename = r"report/"+type+r"/"+"image"+str(count)+"."+type
     image_file_created = open(filename, 'wb')
     image_file_created.write(data)
     image_file_created.close()
@@ -59,6 +68,17 @@ def file_extraction(data):
                 check = re.search(re.escape(value["start"]), data.encode('hex'))
                 if check:
                     print "PNG Signatures Found... Logic for Fetching length of PNG files to be added!"
+
+def file_metadata_extract(file):
+    if exifinfo_compatibility == "True":
+        #
+    else:
+        print "PIL Module is not present - MetaData Extraction from image files failed!"
+
+def file_md5_calculate(file):
+    original_hash = hashlib.md5(open(file, 'rb').read()).hexdigest()
+    return original_hash
+
 
 
 
