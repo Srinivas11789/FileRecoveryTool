@@ -26,7 +26,7 @@ def file_create(data):
 
 # Magic Numbers for Images
 #img_data = {"jpg": {"start":"ffd8ff","end":"ffd9"}}
-img_data = {"jpg": {"start": "ff\sd8\sff\se0", "mid": "4a 46 49 46", "end": "ff\sd9"}}   # JFIF
+img_data = {"jpg": {"start": "ff d8 ff e0", "mid": "4a 46 49 46", "end": "ff d9"}}   # JFIF
 
 # Extract Image Files
 def file_extraction(data):
