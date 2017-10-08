@@ -13,6 +13,8 @@
 import os
 import sys
 import sqlite3
+from prettytable import PrettyTable
+import json
 
 # Custom Module Import
 sys.path.insert(0, 'modules/')
@@ -32,6 +34,9 @@ files = sys.argv[1:]
 directory = "report"
 if not os.path.exists(directory):
     os.makedirs(directory)
+
+# Result Table Creation
+table_of_content = PrettyTable(['FileName', 'md5Hash', 'Metadata'])
 
 # SQL Database and Table Creation for Data Insertion
 sqlhandle = sqlite3.connect(directory+r"/"+r"extractedFiles.db")
@@ -55,7 +60,26 @@ for file in os.listdir("report/pdf"):
 
 sqlhandle.commit()
 
-#for row in cur.execute("SELECT * FROM recoveredFiles"):
-#    print row
+result_report = open(r"report/" + "report.txt", 'wb')
+for row in cur.execute("SELECT * FROM recoveredFiles"):
+    table_of_content.add_row([row[0], row[1], json.dumps(row[2])])
+    result_report.write("\n" * 3)
+    #esult_report.write("=" * 100)
+    result_report.write("\nFilename: %s" % (row[0]))
+    result_report.write("\nMd5 Hash: %s" % (row[1]))
+    if row[2] != "{}":
+        #ans = json.loads(str(row[2]).replace("\'","\""))
+        result_report.write("\nMetadata: ")
+        result_report.write("\n\t"+str(json.dumps(row[2], indent=4, sort_keys=True))+"\n")
+    else:
+        result_report.write("\nMetadata: %s" % (row[2]))
+    #result_report.write("=" * 100)
+    result_report.write("\n" * 3)
+
+result_report.write(str(table_of_content))
+result_report.close()
 
 sqlhandle.close()
+
+
+

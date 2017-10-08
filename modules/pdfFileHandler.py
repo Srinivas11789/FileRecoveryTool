@@ -54,7 +54,7 @@ def file_metadata_extract(file):
     metadata = {}
     if pdfinfo_compatibility == "True":
       try:
-        pdffile = pyPdf.PdfFileReader(file(r"report/"+"pdf"+r"/"+file, 'rb')).getDocumentInfo()
+        pdffile = pyPdf.PdfFileReader(open(r"report/"+"pdf"+r"/"+file, 'rb')).getDocumentInfo()
         metadata.update(pdffile)
       except Exception,e:
             pass
@@ -66,6 +66,12 @@ def file_metadata_extract(file):
 def file_md5_calculate(file):
     original_hash = hashlib.md5(open(r"report/"+"pdf"+r"/"+file, 'rb').read()).hexdigest()
     return str(original_hash)
+
+def result_file_create(content):
+    result_report = open(r"report/"+"report.txt", 'wb')
+    result_report.write(content)
+    result_report.close()
+
 
 
 
