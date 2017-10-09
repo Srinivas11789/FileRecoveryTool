@@ -52,11 +52,13 @@ file_contents = ordinaryFileHandle.copyMemory(ordinaryFileHandle.fileOpen(files)
 imageFileHandler.file_extraction(file_contents)
 pdfFileHandler.file_extraction(file_contents)
 
-for file in os.listdir("report/jpg"):
-  cur.execute("INSERT INTO recoveredFiles VALUES (?, ?, ?)", (file, imageFileHandler.file_md5_calculate(file), imageFileHandler.file_metadata_extract(file)))
+if os.path.exists("report/jpg"):
+  for file in os.listdir("report/jpg"):
+    cur.execute("INSERT INTO recoveredFiles VALUES (?, ?, ?)", (file, imageFileHandler.file_md5_calculate(file), imageFileHandler.file_metadata_extract(file)))
 
-for file in os.listdir("report/pdf"):
-    cur.execute("INSERT INTO recoveredFiles VALUES (?, ?, ?)",(file, pdfFileHandler.file_md5_calculate(file), pdfFileHandler.file_metadata_extract(file)))
+if os.path.exists("report/pdf"):
+   for file in os.listdir("report/pdf"):
+     cur.execute("INSERT INTO recoveredFiles VALUES (?, ?, ?)",(file, pdfFileHandler.file_md5_calculate(file), pdfFileHandler.file_metadata_extract(file)))
 
 sqlhandle.commit()
 
